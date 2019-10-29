@@ -9,16 +9,22 @@ public class DynamicProgramming {
 //        int[][] b = new int[x.length][y.length];
 //        System.out.println(lcsLength(x, y, b));
         //polygonGame
-        int[] v = { -5, -2, -8, -5, 8};
-        char[] op = {' ','*', '+', '*', '*', '+'};
-        int n = v.length;
-        int[][][] m = new int[n + 1][n + 1][2];
-        for (int i = 1; i <= n; i++) {
-            m[i][1][0] = v[i - 1];
-            m[i][1][1] = v[i - 1];
-        }
-        PolygonGame Pol = new PolygonGame(n, op, m);
-        System.out.println(Pol.polyMax());
+//        int[] v = { -5, -2, -8, -5, 8};
+//        char[] op = {' ','*', '+', '*', '*', '+'};
+//        int n = v.length;
+//        int[][][] m = new int[n + 1][n + 1][2];
+//        for (int i = 1; i <= n; i++) {
+//            m[i][1][0] = v[i - 1];
+//            m[i][1][1] = v[i - 1];
+//        }
+//        PolygonGame Pol = new PolygonGame(n, op, m);
+//        System.out.println(Pol.polyMax());
+        int[] p = { 0, 6, 5, 7, 5, 245, 180, 28, 28, 19, 22, 25, 20};
+        int[] s = new int[p.length],
+                l = new int[p.length],
+                b = new int[p.length];
+        Pictureompress.compress(p, s, l, b);
+        Pictureompress.output(s, l, b);
     }
 
     public static void matrixMultiply(int[][] a, int[][] b, int[][] c, int ra, int ca, int rb, int cb) {
@@ -165,5 +171,61 @@ class PolygonGame{
             if(temp < m[i][n][1]) temp = m[i][n][1];
         }
         return temp;
+    }
+}
+
+class Pictureompress{
+    static final int lmax = 256;
+    static final int header = 11;
+    static int m;
+
+    private static int length(int i){
+        int k = 1;
+        i /= 2;
+        while (i > 0){
+            k ++;
+            i /= 2;
+        }
+        return k;
+    }
+
+    public static void compress(int[] p, int[] s, int[] l, int[] b){
+        int n = p.length - 1;
+        s[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            b[i] = length(p[i]);
+            int bmax = b[i];
+            s[i] = s[i - 1] + bmax;
+            l[i] = 1;
+            for (int j = 2; j <= i && j <= lmax; j++) {
+                if(bmax < b[i - j + 1]) bmax = b[i -j + 1];
+                if(s[i] > s[i - j] + j * bmax){
+                    s[i] = s[i - j] + j * bmax;
+                    l[i] = j;
+                }
+            }
+            s[i] += header;
+        }
+    }
+
+    private static void traceback(int n, int[] s, int[] l){
+        if(n == 0)return;
+        traceback(n - l[n], s, l);
+        s[m ++] = n - l[n];
+    }
+
+    public static void output(int[] s, int[] l, int[] b){
+        int n = s.length - 1;
+        System.out.println("The optimal value is " + s[n]);
+        m = 0;
+        traceback(n, s, l);
+        s[m] = n;
+        System.out.println("Decomposed into " + m + " segments");
+        for (int i = 1; i <= m; i++) {
+            l[i] = l[s[i]];
+            b[i] = b[s[i]];
+        }
+        for (int i = 1; i <= m; i++)
+            System.out.println(l[i] + "," + b[i]);
     }
 }

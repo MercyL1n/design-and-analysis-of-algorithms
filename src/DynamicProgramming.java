@@ -4,10 +4,21 @@ public class DynamicProgramming {
 //        int pl = p.length;
 //        int[][] s = matrixChain(p, new int[pl][pl], new int[pl][pl]);
 //        traceback(s, 1, 6);
-        char[] x = {' ','a','b','c','a','b','c','d'};
-        char[] y = {' ','a','b','c','d'};
-        int[][] b = new int[x.length][y.length];
-        System.out.println(lcsLength(x, y, b));
+//        char[] x = {' ','a','b','c','a','b','c','d'};
+//        char[] y = {' ','a','b','c','d'};
+//        int[][] b = new int[x.length][y.length];
+//        System.out.println(lcsLength(x, y, b));
+        //polygonGame
+        int[] v = { -5, -2, -8, -5, 8};
+        char[] op = {' ','*', '+', '*', '*', '+'};
+        int n = v.length;
+        int[][][] m = new int[n + 1][n + 1][2];
+        for (int i = 1; i <= n; i++) {
+            m[i][1][0] = v[i - 1];
+            m[i][1][1] = v[i - 1];
+        }
+        PolygonGame Pol = new PolygonGame(n, op, m);
+        System.out.println(Pol.polyMax());
     }
 
     public static void matrixMultiply(int[][] a, int[][] b, int[][] c, int ra, int ca, int rb, int cb) {
@@ -84,6 +95,7 @@ public class DynamicProgramming {
         //计算权值
         return 0;
     }
+
     public static void minWeightTriangulation(int n, int[][] t, int[][] s){
         for (int i = 1; i <= n; i++) t[i][i] = 0;
         for (int r = 2; r <= n; r++)
@@ -103,3 +115,55 @@ public class DynamicProgramming {
     }
 }
 
+class PolygonGame{
+    private int n;
+    private char[] op;
+    private int[][][] m;
+    int minf;
+    int maxf;
+
+    public PolygonGame(int n, char[] op, int[][][] m) {
+        this.n = n;
+        this.op = op;
+        this.m = m;
+    }
+
+    private void minMax(int i, int s, int j) {
+        int[] e = new int[5];
+        int a = m[i][s][0],
+                b = m[i][s][1],
+                r = (i + s - 1) % n + 1,
+                c = m[r][j - s][0],
+                d = m[r][j - s][1];
+        if(op[r] == '+') {
+            minf = a + c;
+            maxf = b + d;
+        } else {
+            e[1] = a * c;
+            e[2] = a * d;
+            e[3] = b * c;
+            e[4] = b * d;
+            minf = e[1];
+            maxf = e[1];
+            for(int k = 2; k < 5; k ++){
+                if(minf > e[k]) minf = e[k];
+                if(maxf < e[k]) maxf = e[k];
+            }
+        }
+    }
+
+    public int polyMax(){
+        for (int j = 2; j <= n; j ++)
+            for(int i = 1; i <= n; i ++)
+                for(int s = 1; s < j; s ++){
+                    minMax(i, s, j);
+                    if(m[i][j][0] > minf) m[i][j][0] = minf;
+                    if(m[i][j][1] < maxf) m[i][j][1] = maxf;
+                }
+        int temp = m[1][n][1];
+        for (int i = 2; i <= n; i++) {
+            if(temp < m[i][n][1]) temp = m[i][n][1];
+        }
+        return temp;
+    }
+}

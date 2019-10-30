@@ -1,3 +1,5 @@
+package DynamicProgramming;
+
 public class DynamicProgramming {
     public static void main(String[] args){
 //        int[] p = new int[]{30, 35, 15, 5, 10, 20, 25};

@@ -1,3 +1,5 @@
+package Recursive;
+
 import java.util.Scanner;
 
 public class Recursive {

@@ -1,3 +1,5 @@
+package Recursive;
+
 public class Student implements Comparable{
 
     int score;
@@ -24,4 +26,5 @@ public class Student implements Comparable{
     }
 
 }
+
 

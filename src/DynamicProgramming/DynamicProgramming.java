@@ -32,8 +32,30 @@ public class DynamicProgramming {
 //        int[] net = new int[11];
 //        MNS.mnnet(c, size);
 //        MNS.traceback(c, size, net);
+//        int[] a = new int[]{2,4,3,6,1};
+//        int[] b = new int[]{5,2,3,1,7};
+//        System.out.println(FlowShop.flowShop(a, b, new int[5]));
+//        int[] w = new int[]{0, 2, 2, 6, 5, 4};
+//        int[] v = new int[]{0, 6, 3, 5, 4, 6};
+//        int[] x = new int[w.length];
+//        int c = 10;
+//        int[][] m = new int[w.length][c + 1];
+//        Knapsack.knapsack1(v, w, c, m);
+//        Knapsack.traceback1(m, w, c, x);
+//        System.out.println(m[1][c]);
+//        for (int i: x)
+//            System.out.println(i);
+        double[] ww = new double[]{0, 2, 2, 6, 5, 4};
+        double[] vv = new double[]{0, 6, 3, 5, 4, 6};
+        double[][] p = new double[100][2];
+        int cc = 10;
+        int[] xx = new int[ww.length];
+        int[] head = new int[ww.length + 1];
+        System.out.println(Knapsack.knapsack2( ww, vv, cc, p, head));
+        Knapsack.traceback2(ww, vv, p, head, xx);
+        for (int i: xx)
+            System.out.println(i);
     }
-
 }
 
 
